@@ -1,0 +1,1459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💕 Para Ti 💕</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --pink: #ff2d55;
+            --dark-pink: #c2185b;
+            --light-pink: #ff6b9d;
+            --gold: #ffd700;
+            --bg-dark: #0a0008;
+            --bg-gradient: linear-gradient(135deg, #0a0008 0%, #1a0011 30%, #2d0020 60%, #0a0008 100%);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Lora', serif;
+            background: var(--bg-dark);
+            color: #fff;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        /* ── CURSOR HEARTS ── */
+        .cursor-heart {
+            position: fixed;
+            pointer-events: none;
+            font-size: 18px;
+            z-index: 9999;
+            animation: cursorFloat 1.5s ease-out forwards;
+        }
+
+        @keyframes cursorFloat {
+            0% { opacity: 1; transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(var(--dx), -80px) scale(0.3) rotate(45deg); }
+        }
+
+        /* ── INTRO SCREEN ── */
+        #intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 10000;
+            background: radial-gradient(ellipse at center, #1a0011 0%, #0a0008 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease, visibility 1s ease;
+        }
+
+        #intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #intro-screen h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2rem, 6vw, 4.5rem);
+            color: var(--pink);
+            text-shadow: 0 0 40px rgba(255, 45, 85, 0.6);
+            margin-bottom: 2rem;
+            animation: introTitle 2s ease-out;
+        }
+
+        @keyframes introTitle {
+            from { opacity: 0; transform: translateY(30px) scale(0.8); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        #start-btn {
+            position: relative;
+            padding: 18px 50px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: #fff;
+            background: linear-gradient(135deg, var(--pink), var(--dark-pink));
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 30px rgba(255, 45, 85, 0.4);
+            animation: introBtn 2s ease-out 0.5s both;
+        }
+
+        @keyframes introBtn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #start-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 50px rgba(255, 45, 85, 0.7);
+        }
+
+        #start-btn::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50px;
+            background: linear-gradient(45deg, var(--pink), var(--gold), var(--pink));
+            z-index: -1;
+            animation: borderGlow 3s linear infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* ── FLOATING PARTICLES BG ── */
+        #particles-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── HEART EXPLOSION CANVAS ── */
+        #explosion-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* ── HERO SECTION ── */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 45, 85, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: heroPulseGlow 4s ease-in-out infinite;
+        }
+
+        @keyframes heroPulseGlow {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.3); opacity: 1; }
+        }
+
+        /* ── BEATING HEART ── */
+        .heart-container {
+            position: relative;
+            margin-bottom: 2rem;
+            cursor: pointer;
+        }
+
+        .heart-svg {
+            width: clamp(120px, 25vw, 200px);
+            height: clamp(120px, 25vw, 200px);
+            filter: drop-shadow(0 0 30px rgba(255, 45, 85, 0.8));
+            animation: heartBeat 1.2s ease-in-out infinite;
+        }
+
+        @keyframes heartBeat {
+            0%   { transform: scale(1); }
+            14%  { transform: scale(1.15); }
+            28%  { transform: scale(1); }
+            42%  { transform: scale(1.10); }
+            56%  { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+
+        .heart-svg .heart-path {
+            fill: url(#heartGradient);
+        }
+
+        .heart-ring {
+            position: absolute;
+            inset: -30px;
+            border: 2px solid rgba(255, 45, 85, 0.3);
+            border-radius: 50%;
+            animation: ringPulse 2s ease-out infinite;
+        }
+
+        .heart-ring:nth-child(2) { animation-delay: 0.5s; inset: -50px; }
+        .heart-ring:nth-child(3) { animation-delay: 1s; inset: -70px; }
+
+        @keyframes ringPulse {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* ── HERO TEXT ── */
+        .hero-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            text-align: center;
+            background: linear-gradient(135deg, var(--pink), #ff8fa3, var(--gold), var(--pink));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 5s ease infinite, fadeInUp 1.5s ease-out 0.5s both;
+            line-height: 1.2;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero-subtitle {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            color: rgba(255, 141, 163, 0.8);
+            text-align: center;
+            margin-top: 1rem;
+            animation: fadeInUp 1.5s ease-out 1s both;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            animation: fadeInUp 1.5s ease-out 2s both;
+        }
+
+        .scroll-indicator span {
+            font-family: 'Lora', serif;
+            font-size: 0.85rem;
+            color: rgba(255, 141, 163, 0.5);
+            letter-spacing: 2px;
+        }
+
+        .scroll-arrow {
+            width: 24px;
+            height: 24px;
+            border-right: 2px solid rgba(255, 141, 163, 0.5);
+            border-bottom: 2px solid rgba(255, 141, 163, 0.5);
+            transform: rotate(45deg);
+            animation: scrollBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollBounce {
+            0%, 100% { transform: rotate(45deg) translate(0, 0); opacity: 0.5; }
+            50% { transform: rotate(45deg) translate(5px, 5px); opacity: 1; }
+        }
+
+        /* ── CONTENT SECTIONS ── */
+        .section {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 100px 2rem;
+        }
+
+        .section-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            color: var(--pink);
+            text-shadow: 0 0 30px rgba(255, 45, 85, 0.4);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-text {
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            line-height: 2;
+            color: rgba(255, 200, 210, 0.85);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+        }
+
+        .section-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            opacity: 0;
+            transition: opacity 1s ease 0.4s;
+        }
+
+        .divider.visible { opacity: 1; }
+
+        .divider::before, .divider::after {
+            content: '';
+            height: 1px;
+            width: 80px;
+            background: linear-gradient(90deg, transparent, var(--pink), transparent);
+        }
+
+        .divider-heart {
+            font-size: 1.2rem;
+            animation: heartBeat 1.2s ease-in-out infinite;
+        }
+
+        /* ── PHOTO PLACEHOLDER ── */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .photo-placeholder {
+            aspect-ratio: 1;
+            border-radius: 20px;
+            background: linear-gradient(135deg, rgba(255, 45, 85, 0.15), rgba(255, 45, 85, 0.05));
+            border: 1px solid rgba(255, 45, 85, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            color: rgba(255, 141, 163, 0.5);
+            font-size: 0.9rem;
+            transition: transform 0.5s, box-shadow 0.5s;
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .photo-placeholder.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .photo-placeholder:hover {
+            transform: scale(1.05) !important;
+            box-shadow: 0 10px 40px rgba(255, 45, 85, 0.3);
+            border-color: rgba(255, 45, 85, 0.5);
+        }
+
+        .photo-placeholder .icon {
+            font-size: 2.5rem;
+        }
+
+        .photo-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+            position: absolute;
+            inset: 0;
+        }
+
+        .photo-placeholder.has-img {
+            position: relative;
+            overflow: hidden;
+            background: none;
+            border: none;
+        }
+
+        .photo-placeholder.has-img:hover {
+            box-shadow: 0 10px 50px rgba(255, 45, 85, 0.4);
+        }
+
+        /* ── PHOTO CATEGORY HEADERS ── */
+        .photo-category {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+            margin-top: 2.5rem;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 45, 85, 0.15);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .photo-category.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── TIMELINE ── */
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin-top: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--pink), transparent);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .timeline-item::before {
+            content: '💕';
+            position: absolute;
+            left: -36px;
+            top: 5px;
+            font-size: 1rem;
+        }
+
+        .timeline-date {
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 0.3rem;
+        }
+
+        .timeline-text {
+            color: rgba(255, 200, 210, 0.85);
+            line-height: 1.8;
+        }
+
+        /* ── FINAL CTA ── */
+        .final-section {
+            position: relative;
+            z-index: 2;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .final-heart {
+            font-size: 5rem;
+            animation: heartBeat 1.2s ease-in-out infinite;
+            margin-bottom: 2rem;
+        }
+
+        .final-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            background: linear-gradient(135deg, var(--pink), var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .final-text {
+            font-family: 'Lora', serif;
+            font-style: italic;
+            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+            color: rgba(255, 200, 210, 0.7);
+            max-width: 600px;
+        }
+
+        /* ── MUSIC CONTROLS ── */
+        #music-controls {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(10, 0, 8, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 45, 85, 0.3);
+            border-radius: 50px;
+            padding: 8px 14px 8px 10px;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        #music-controls:hover {
+            border-color: rgba(255, 45, 85, 0.6);
+            box-shadow: 0 0 30px rgba(255, 45, 85, 0.15);
+        }
+
+        #music-controls.playing {
+            box-shadow: 0 0 25px rgba(255, 45, 85, 0.3);
+            animation: musicPulse 3s ease-in-out infinite;
+        }
+
+        #track-name {
+            font-family: 'Lora', serif;
+            font-size: 0.75rem;
+            color: rgba(255, 180, 200, 0.7);
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: color 0.3s;
+            user-select: none;
+        }
+
+        #music-controls.playing #track-name {
+            color: rgba(255, 180, 200, 0.95);
+        }
+
+        #music-toggle,
+        #track-switch {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 45, 85, 0.4);
+            background: rgba(255, 45, 85, 0.08);
+            color: var(--pink);
+            font-size: 1.15rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            flex-shrink: 0;
+            line-height: 1;
+            padding: 0;
+            margin: 0;
+        }
+
+        #music-toggle:hover,
+        #track-switch:hover {
+            background: rgba(255, 45, 85, 0.25);
+            transform: scale(1.1);
+            border-color: rgba(255, 45, 85, 0.7);
+        }
+
+        #track-switch:active {
+            transform: scale(0.95);
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 45, 85, 0.2); }
+            50% { box-shadow: 0 0 35px rgba(255, 45, 85, 0.45); }
+        }
+
+        @media (max-width: 600px) {
+            #music-controls {
+                bottom: 15px;
+                right: 15px;
+                padding: 6px 10px 6px 8px;
+                gap: 6px;
+            }
+            #track-name {
+                max-width: 100px;
+                font-size: 0.65rem;
+            }
+            #music-toggle,
+            #track-switch {
+                width: 34px;
+                height: 34px;
+                font-size: 1rem;
+            }
+        }
+
+        /* ── SPARKLE ON CLICK ── */
+        .sparkle-burst {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: sparkleFly 0.8s ease-out forwards;
+        }
+
+        @keyframes sparkleFly {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0); }
+        }
+
+        /* ── LIGHTBOX ── */
+        #lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 20000;
+            background: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            cursor: zoom-out;
+        }
+
+        #lightbox.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 0 60px rgba(255, 45, 85, 0.3);
+            transform: scale(0.85);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            object-fit: contain;
+        }
+
+        #lightbox.active img {
+            transform: scale(1);
+        }
+
+        #lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2.5rem;
+            color: rgba(255, 200, 210, 0.8);
+            cursor: pointer;
+            transition: color 0.3s, transform 0.3s;
+            z-index: 20001;
+            line-height: 1;
+            background: none;
+            border: none;
+        }
+
+        #lightbox-close:hover {
+            color: var(--pink);
+            transform: scale(1.2);
+        }
+
+        .photo-placeholder.has-img {
+            cursor: zoom-in;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .photo-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .section {
+                padding: 60px 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- INTRO SCREEN -->
+    <div id="intro-screen">
+        <h1>💕 Feliz San Valentín mi amor 💕</h1>
+        <button id="start-btn">Abre esta carta</button>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div id="lightbox">
+        <button id="lightbox-close">&times;</button>
+        <img id="lightbox-img" src="" alt="Foto ampliada">
+    </div>
+
+    <!-- BG CANVASES -->
+    <canvas id="particles-canvas"></canvas>
+    <canvas id="explosion-canvas"></canvas>
+
+    <!-- MUSIC -->
+    <!--
+        🎵 INSTRUCCIONES DE MÚSICA:
+        Coloca tus archivos de música en la misma carpeta:
+        1. "perfect.mp3"  →  Perfect - Ed Sheeran
+        2. "a_thousand_years_piano.mp3"  →  A Thousand Years (Piano Cover)
+        O cambia el src abajo con la ruta a tus archivos de audio.
+    -->
+    <audio id="track-1" loop preload="auto">
+        <source src="perfect.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="track-2" loop preload="auto">
+        <source src="a_thousand_years_piano.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- MUSIC CONTROLS -->
+    <div id="music-controls">
+        <button id="track-switch" title="Cambiar canción">⏭</button>
+        <div id="track-name">Perfect — Ed Sheeran</div>
+        <button id="music-toggle" title="Música">🔇</button>
+    </div>
+
+    <!-- ═══════ HERO ═══════ -->
+    <section class="hero" id="hero">
+        <div class="heart-container" id="main-heart">
+            <div class="heart-ring"></div>
+            <div class="heart-ring"></div>
+            <div class="heart-ring"></div>
+            <svg class="heart-svg" viewBox="0 0 512 512">
+                <defs>
+                    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ff2d55"/>
+                        <stop offset="50%" style="stop-color:#ff6b9d"/>
+                        <stop offset="100%" style="stop-color:#ff2d55"/>
+                    </linearGradient>
+                    <filter id="heartGlow">
+                        <feGaussianBlur stdDeviation="8" result="glow"/>
+                        <feMerge>
+                            <feMergeNode in="glow"/>
+                            <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                    </filter>
+                </defs>
+                <path class="heart-path" filter="url(#heartGlow)"
+                      d="M256 448l-30-28C108 312 48 260 48 196 48 142 91 96 144 96c30 0 59 14 80 36l32 34 32-34c21-22 50-36 80-36 53 0 96 46 96 100 0 64-60 116-178 224l-30 28z"/>
+            </svg>
+        </div>
+        <h1 class="hero-title">Para ti, Moñito</h1>
+        <p class="hero-subtitle">De un "Wolasssss" el 19 de diciembre de 2023 a nuestra casita juntos en 2026. Cada día a tu lado es un regalo ✨</p>
+        <div class="scroll-indicator">
+            <span>DESCUBRE MÁS</span>
+            <div class="scroll-arrow"></div>
+        </div>
+    </section>
+
+    <!-- ═══════ SECTION 1 ═══════ -->
+    <section class="section">
+        <h2 class="section-title reveal">Por qué te amo 💕</h2>
+        <p class="section-text reveal">
+            Porque desde el primer día que me dijiste "tengo novio, lo siento"
+            con ese descaro tan tuyo, supe que eras especial. Porque montas Legos cuando estás estresada,
+            juegas al Minecraft en modo pacífico porque no matas ni bichos, y me mandas stickers
+            personalizados a las tantas de la madrugada. Porque coges bus, metro y otro bus cada mañana
+            para ir a tu curro en Madrid sin quejarte (bueno, un poquillo sí), y cuando sales corriendo
+            me escribes "TOY YENDO" y yo ya estoy sonriendo.
+        </p>
+        <div class="divider reveal">
+            <span class="divider-heart">💖</span>
+        </div>
+        <p class="section-text reveal">
+            Te amo porque vemos el Eurovisión juntos, porque apostamos en la Champions
+            y siempre ganamos (o eso decimos), y porque en nuestro primer aniversario te quedaste frita esperando para
+            felicitarme nuestro aniversario y me lo dijiste a las seis de la mañana.
+            Porque me dices "mi futuro esposo" cada noche, y yo te contesto "mi futura esposa" sabiendo
+            que no es broma. Porque eres mi Moñito, mi reinota, mi gymrat de pega, mi compañera de airfryer,
+            de Fantasy, de crypto, de tartas de queso (aunque a ti no te gusten) y de vida. Porque vamos a estrenar NUESTRA CASITA
+            y ya no habrá más "mañana duermo contigo" — será TODAS las noches. 🏠💕
+        </p>
+    </section>
+
+    <!-- ═══════ SECTION 2 - TIMELINE ═══════ -->
+    <section class="section">
+        <h2 class="section-title reveal">Nuestra historia juntos 📖</h2>
+        <div class="timeline">
+            <div class="timeline-item reveal">
+                <div class="timeline-date">✨ 19 de diciembre de 2023 — Primer mensaje</div>
+                <p class="timeline-text">
+                    "Wolasssss" — "Tengo novio, lo siento". Así empezó todo. Tú con novio, yo sin saber
+                    quién eras, y un "compra pan" que se convirtió en nuestra primera broma. Ese día
+                    descubrí que eras Tauro, portuguesa de corazón, del Real Madrid (nadie es perfecto ;)),
+                    y que decías "chi" en vez de "sí".
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">🎄 25 de diciembre de 2023 — Navidad confesando</div>
+                <p class="timeline-text">
+                    La Navidad nos pilló cada uno en su pueblo, pero pegados al móvil. Los "me gustas"
+                    empezaron a volar, los audios se hicieron eternos, y yo parando películas para
+                    escucharlos. Planeamos quedar el 7 de enero aunque al final no se pudo :(.
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">💫 Febrero de 2024 — Te conocí en persona</div>
+                <p class="timeline-text">
+                    Después de semanas hablando sin parar, por fin nos vimos la cara. Tú con tus
+                    trabas mentales y físicas que querías superar "porque quiero estar bien para mí
+                    y para ti". Pero fue una primera vez genial, en todos los sentidos. La cita perfecta.
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">💕 12 de febrero de 2024 — Somos novios</div>
+                <p class="timeline-text">
+                    De "tengo novio, lo siento" a ser MI NOVIA WAPA. Lo que empezó como broma se
+                    convirtió en lo más bonito que me ha pasado. Carbonaras en mi piso, tú cogiendo
+                    el tren para venir a verme (pocas veces jeje), y las primeras noches juntos donde descubrí que roncabas
+                    (un poquillo).
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">⚽ Verano de 2024 — Eurocopa, gym y "mi vida"</div>
+                <p class="timeline-text">
+                    Empezamos a ir al gym juntos, tú dejaste chanclas en mi casa "para quedarse allí"
+                    (ya tenías almohada, coletero y todo — habías conquistado mi piso como mi corazón).
+                    La Eurocopa nos unió y nos arruinó con las apuestas. Un día te llamé "mi vida"
+                    y me dijiste: "me derrito cada vez que me lo dices". ES QUE LO ERES.
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">✈️ Agosto de 2024 — Lisboa, nuestro primer viaje</div>
+                <p class="timeline-text">
+                    Nuestro primer viaje juntos, y tenía que ser a tu país. Lisboa con sus
+                    callejuelas, sus pastéis de nata, praça comerço... pero esta vez era yo
+                    el guía, enseñándote cada rincón de la ciudad. El primero de muchos viajes juntos. 🇵🇹
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">💒 Septiembre de 2024 — La boda de Paki</div>
+                <p class="timeline-text">
+                    Te llevé a mi pueblo por primera vez para la boda de mi prima Paki.
+                    Tú conociendo a mi familia, y bebiendo vinito blanco jeje. Ese fin de semana supe que
+                    eras de mi familia para siempre.
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">⚽ Noviembre de 2024 — Donosti, tu regalo de cumple</div>
+                <p class="timeline-text">
+                    Me regalaste entradas para ver el Real Sociedad – Ajax en Anoeta.
+                    El mejor regalo de cumple que me han hecho nunca. Donosti con sus
+                    pintxos, la Parte Vieja, la Concha, y tú animando a mi lado en el
+                    estadio. Ese día confirmé que eras la mejor novia del mundo. 🎁⚽
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">🎆 31 de diciembre de 2024 — Nochevieja 2024</div>
+                <p class="timeline-text">
+                    Cada uno con su familia, pero juntos en el corazón. Tú preparándote con mi paleta
+                    de sombras, yo con 70 croquetas en Quintana. A las 00:00 los dos al móvil:
+                    "Feliz año mi vida, por un 2025, 2026, 2027… 2080 contigo ❤️‍🩹".
+                    Y tú ganando a los bolos de la Wii a las 3 de la mañana. "Estás saliendo con una ganadora".
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">🥂 12 de febrero de 2025 — ¡Un añito juntos!</div>
+                <p class="timeline-text">
+                    "Feliz aniversario mi vida, gracias por este añito, te amo muchísimo, por muchos
+                    añitos más". Tú querías decírmelo a medianoche… pero te quedaste frita y me lo
+                    dijiste a las 6 de la mañana: "ME QUEDÉ FRITA, ESTABA ESPERANDO A QUE FUESEN
+                    LAS 12". Nos dimos los regalos, me corté el pelo para la ocasión, y tú dijiste
+                    "QUÉ GUAPO, TE COMO LOS MORRETES". Un año de "chi", "bof" y "te amo".
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">✈️ Febrero de 2025 — Milán, aniversario italiano</div>
+                <p class="timeline-text">
+                    Para celebrar nuestro primer añito nos fuimos a Milán. El Duomo,
+                    la pizza italiana de verdad, las calles de moda, y nosotros dos
+                    perdidos pero felices. Nuestro aniversario con acento italiano.
+                    La mejor forma de celebrar un año de "chi" y "te amo". 🇮🇹
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">🎂 Mayo de 2025 — Tu cumple, Moñu</div>
+                <p class="timeline-text">
+                    Fiesta en familia, tartas, Eurovisión de fondo, y yo recogiendo mis tuppers de
+                    tarta al llegar. Tú con tus primas, las bifanas portuguesas, y tu madre haciendo
+                    maravillas en la cocina. Y al final del día, "TE AMO, GRACIAS POR VENIR",
+                    y yo pensando que no hay sitio donde prefiera estar.
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">🎓 19 de junio de 2025 — Tu graduación, Moñito</div>
+                <p class="timeline-text">
+                    Graduada en RRHH y RRLL. Verte ahí con tu birrete y tu sonrisa, rodeada
+                    de tu familia, fue uno de los momentos más bonitos. Todo el esfuerzo,
+                    las noches estudiando, los nervios de los exámenes… y ahí estabas tú,
+                    brillando. Qué orgulloso estoy de ti, mi Moñito graduada. 🎓💕
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">✈️ Julio de 2025 — Budapest, el tercer viaje</div>
+                <p class="timeline-text">
+                    Budapest en verano: el Parlamento iluminado de noche, el crucero, la ciudad de "Buda" y "Pest". 
+                    Mucho calor, y nosotros sin poder apostar en bet :(
+                    Cada viaje contigo es mejor que el anterior. Ya teníamos claro
+                    que lo nuestro era para toda la vida. 🇭🇺
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">💼 Septiembre de 2025 — Moñito trabajadora</div>
+                <p class="timeline-text">
+                    Bus, metro, bus — tu primer curro en Madrid, en RRHH, y tú contando los días
+                    del commute. Yo teletrabajando con el bitbucket roto mientras tú me llamabas
+                    cuando te aburrías en la oficina. Jujutsu Kaisen por las noches, patatas en
+                    la airfryer, Fantasy juntos. "Mi futuro esposo" cada noche sin falta.
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">⛪ Diciembre de 2025 — El bautizo de Blanca</div>
+                <p class="timeline-text">
+                    Otra vez a mi pueblo, esta vez para el bautizo de Blanca. Tú ya eras
+                    una más de la familia, saludando a todos como si los conocieras de toda
+                    la vida. Viéndote ahí, con mi gente, en mi pueblo — supe que no
+                    había nada más bonito que compartir mis raíces contigo.
+                </p>
+            </div>
+            <div class="timeline-item reveal">
+                <div class="timeline-date">🏠 Febrero de 2026 — NUESTRA CASITA</div>
+                <p class="timeline-text">
+                    "Última semanita en Majada. NUESTRA NUEVA CASITA NOS ESPERA". Después de dos
+                    años de "mañana duermo contigo" y viernes de recogerte en coche, por fin nos
+                    mudamos juntos. Con cuenta conjunta, bolsas del chino para la ropa,
+                    y un debate sobre alarmas. De un "Wolasssss" a una vida juntos.
+                    Ya no hay más despedidas de domingo — ahora es para siempre. 💕
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════ SECTION 3 - PHOTOS ═══════ -->
+    <section class="section">
+        <h2 class="section-title reveal">Nuestros momentos 📸</h2>
+        <p class="section-text reveal">
+            Nuestros mejores momentos, Moñito 💕
+        </p>
+
+        <!-- Lisboa 2024 -->
+        <h3 class="photo-category reveal">🇵🇹 Lisboa 2024</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/2-8-2024_5.jpeg" alt="Lisboa 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/2-8-2024_4.jpeg" alt="Lisboa 2024"></div>
+                <div class="photo-placeholder has-img reveal"><img src="img/2-8-2024_3.jpg" alt="Lisboa 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/2-8-2024_1.jpg" alt="Lisboa 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/2-8-2024_2.jpg" alt="Lisboa 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/2-8-2024_6.jpeg" alt="Lisboa 2024"></div>
+        </div>
+
+        <!-- Boda de Paki -->
+        <h3 class="photo-category reveal">💒 Boda de Paki</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/7-9-2024.jpeg" alt="Boda Paki"></div>
+        </div>
+
+        <!-- Donosti 2024 -->
+        <h3 class="photo-category reveal">⚽ Donosti 2024</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/28-11-2024_2.jpg" alt="Donosti 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/28-11-2024_3.jpg" alt="Donosti 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/28-11-2024_1.jpg" alt="Donosti 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/29-11-2024_1.jpg" alt="Donosti 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/29-11-2024_2.jpg" alt="Donosti 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/29-11-2024_3.jpg" alt="Donosti 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/29-11-2024_4.jpg" alt="Donosti 2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/30-11-2024.jpg" alt="Donosti 2024"></div>
+        </div>
+
+        <!-- Milán 2025 -->
+        <h3 class="photo-category reveal">🇮🇹 Milán 2025</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/15-2-2025_1.jpg" alt="Milán 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/15-2-2025_2.jpg" alt="Milán 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/15-2-2025_3.jpg" alt="Milán 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/15-2-2025_4.jpg" alt="Milán 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/15-2-2025_5.jpg" alt="Milán 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/15-2-2025_6.jpg" alt="Milán 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/16-2-2025.jpg" alt="Milán 2025"></div>
+        </div>
+
+        <!-- Graduación 2025 -->
+        <h3 class="photo-category reveal">🎓 Graduación — 19 junio 2025</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/19-6-2025_1.jpg" alt="Graduación 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/19-6-2025_2.jpg" alt="Graduación 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/19-6-2025_3.jpg" alt="Graduación 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/19-6-2025_4.jpg" alt="Graduación 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/19-6-2025_5.jpg" alt="Graduación 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/19-6-2025_6.jpg" alt="Graduación 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/19-6-2025_7.jpg" alt="Graduación 2025"></div>
+        </div>
+
+        <!-- Budapest 2025 -->
+        <h3 class="photo-category reveal">🇭🇺 Budapest 2025</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/10-7-2025_1.jpg" alt="10-7-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/10-7-2025_2.jpg" alt="10-7-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/10-7-2025_3.jpg" alt="10-7-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/10-7-2025_4.jpg" alt="10-7-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/11-7-2025_1.jpg" alt="Budapest 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/11-7-2025_2.jpg" alt="Budapest 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/11-7-2025_3.jpg" alt="Budapest 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/11-7-2025_5.jpg" alt="Budapest 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/11-7-2025_6.jpg" alt="Budapest 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/12-7-2025.jpg" alt="Budapest 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/13-7-2025.jpg" alt="Budapest 2025"></div>
+        </div>
+
+        <!-- Bautizo de Blanca 2025 -->
+        <h3 class="photo-category reveal">⛪ Bautizo de Blanca 2025</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/7-12-2025_1.jpg" alt="Bautizo de Blanca"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/7-12-2025_2.jpg" alt="Bautizo de Blanca"></div>
+        </div>
+
+        <!-- Atardeceres -->
+        <h3 class="photo-category reveal">🌅 Atardeceres</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/25-5-2024.jpg" alt="25-5-2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/1-8-2025_2.jpg" alt="1-8-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/22-10-2025.jpg" alt="22-10-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/8-11-2025.jpg" alt="8-11-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/10-11-2025.jpg" alt="10-11-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/6-2-2026_1.jpg" alt="6-2-2026"></div>
+        </div>
+
+        <!-- Momentos randoms -->
+        <h3 class="photo-category reveal">💕 Momentos (& randoms)</h3>
+        <div class="photo-grid">
+            <div class="photo-placeholder has-img reveal"><img src="img/16-2-2024.jpg" alt="16-2-2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/17-5-2024.jpg" alt="17-5-2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/20-11-2024.jpg" alt="20-11-2024"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/27-1-2025.jpg" alt="27-1-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/14-6-2025.jpg" alt="14-6-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/11-7-2025_4.jpg" alt="Budapest 2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/1-8-2025_1.jpg" alt="1-8-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/21-10-2025.jpg" alt="21-10-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/27-11-2025.jpg" alt="27-11-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/6-12-2025.jpg" alt="6-12-2025"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/5-1-2026.jpg" alt="5-1-2026"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/10-1-2026_1.jpg" alt="10-1-2026"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/10-1-2026_2.jpg" alt="10-1-2026"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/10-1-2026_3.jpg" alt="10-1-2026"></div>
+            <div class="photo-placeholder has-img reveal"><img src="img/6-2-2026_2.jpg" alt="6-2-2026"></div>
+        </div>
+    </section>
+
+    <!-- ═══════ SECTION 4 ═══════ -->
+    <section class="section">
+        <h2 class="section-title reveal">Lo que siento por ti 💌</h2>
+        <p class="section-text reveal">
+            Moñito, hace dos años un "Wolasssss" nos cambió la vida. Y hoy, en febrero de 2026,
+            estamos a punto de estrenar nuestra primera casa juntos. ¿Sabes lo increíble que es eso?
+            Pasamos de hablar por WhatsApp sin conocernos, a que tú cojas tres transportes para
+            venir a dormir a mi piso, a que yo te recoja en coche cada jueves con Monster
+            y comidita rica, a que busquemos piso juntos y lo convirtamos en nuestro hogar.
+        </p>
+        <div class="divider reveal">
+            <span class="divider-heart">💗</span>
+        </div>
+        <p class="section-text reveal">
+            Estoy orgulloso de todo lo que has conseguido: de tu carrera, de tu carrera, tu primer curro en RRHH
+            madrugando cada mañana con el bus de las siete, de tu carné de cochito, de cómo cuidas a tu familia, de cómo
+            defiendes al Madrid con datos y pasión (aunque estés equivocada, claro 😏).
+            Me enamoras un poco más cada día, y mira que después de 376.000 líneas de WhatsApp 
+            (literalmente 376k mensajes, me he descargado el historial pa esto)
+            no debería quedar nada por descubrir… pero siempre me sorprendes.
+        </p>
+        <div class="divider reveal">
+            <span class="divider-heart">💖</span>
+        </div>
+        <p class="section-text reveal">
+            Sueño con ver todos los Eurovisiones contigo, perder todas las apuestas de la Champions,
+            cocinar mil carbonaras más, ver Stranger Things, Breaking Bad, o pelis de miedo hasta las tantas, ir al gym (o cancelar
+            e ir a la siesta), llevar tartas de queso a tu familia, jugar al Pokémon Go por la calle,
+            hacer nuestro Fantasy cada temporada, y sobre todo — despertarme cada mañana
+            contigo en NUESTRA casita. Ya no más "mañana duermo contigo". Ahora es todas las noches.
+            Te amo con todo mi corazón, mi Moñu. Mi futura esposa. Mi todo. 💕
+        </p>
+    </section>
+
+    <!-- ═══════ FINAL SECTION ═══════ -->
+    <section class="final-section">
+        <div class="final-heart">❤️</div>
+        <h2 class="final-title reveal">De "Wolasssss" a nuestra casita juntos</h2>
+        <p class="final-text reveal">
+            Sí a absolutamente todo contigo.
+            A las carbonaras, a las patatas con carnita, a sushi, a crypto, a las apuestas perdidas, a los debates del furbo,
+            y a cada "buenas noches mi vida" hasta que seamos viejitos.
+            Te amo muchísimo, mi futura esposa. Por muchos añitos más. — Tu Moñito ❤️‍🩹
+        </p>
+    </section>
+
+    <script>
+    // ═══════════════════════════════════════════
+    //  PARTICLES BACKGROUND
+    // ═══════════════════════════════════════════
+    const particlesCanvas = document.getElementById('particles-canvas');
+    const pCtx = particlesCanvas.getContext('2d');
+    let particles = [];
+
+    function resizeParticles() {
+        particlesCanvas.width = window.innerWidth;
+        particlesCanvas.height = window.innerHeight;
+    }
+    resizeParticles();
+    window.addEventListener('resize', resizeParticles);
+
+    class Particle {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = Math.random() * particlesCanvas.width;
+            this.y = Math.random() * particlesCanvas.height;
+            this.size = Math.random() * 3 + 1;
+            this.speedY = -(Math.random() * 0.5 + 0.1);
+            this.speedX = (Math.random() - 0.5) * 0.3;
+            this.opacity = Math.random() * 0.5 + 0.1;
+            this.color = Math.random() > 0.5 ? '255, 45, 85' : '255, 107, 157';
+            this.twinkleSpeed = Math.random() * 0.02 + 0.005;
+            this.twinkleOffset = Math.random() * Math.PI * 2;
+        }
+        update(t) {
+            this.y += this.speedY;
+            this.x += this.speedX + Math.sin(t * 0.001 + this.twinkleOffset) * 0.2;
+            this.currentOpacity = this.opacity * (0.5 + 0.5 * Math.sin(t * this.twinkleSpeed + this.twinkleOffset));
+            if (this.y < -10) {
+                this.y = particlesCanvas.height + 10;
+                this.x = Math.random() * particlesCanvas.width;
+            }
+        }
+        draw() {
+            pCtx.beginPath();
+            pCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            pCtx.fillStyle = `rgba(${this.color}, ${this.currentOpacity})`;
+            pCtx.fill();
+        }
+    }
+
+    for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+    function animateParticles(t) {
+        pCtx.clearRect(0, 0, particlesCanvas.width, particlesCanvas.height);
+        particles.forEach(p => { p.update(t); p.draw(); });
+        requestAnimationFrame(animateParticles);
+    }
+    requestAnimationFrame(animateParticles);
+
+    // ═══════════════════════════════════════════
+    //  HEART EXPLOSION
+    // ═══════════════════════════════════════════
+    const explosionCanvas = document.getElementById('explosion-canvas');
+    const eCtx = explosionCanvas.getContext('2d');
+    let hearts = [];
+
+    function resizeExplosion() {
+        explosionCanvas.width = window.innerWidth;
+        explosionCanvas.height = window.innerHeight;
+    }
+    resizeExplosion();
+    window.addEventListener('resize', resizeExplosion);
+
+    class HeartParticle {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 8 + 3;
+            this.vx = Math.cos(angle) * speed;
+            this.vy = Math.sin(angle) * speed;
+            this.gravity = 0.12;
+            this.friction = 0.98;
+            this.size = Math.random() * 18 + 10;
+            this.opacity = 1;
+            this.decay = Math.random() * 0.015 + 0.008;
+            this.rotation = Math.random() * Math.PI * 2;
+            this.rotationSpeed = (Math.random() - 0.5) * 0.15;
+            this.hue = Math.random() > 0.7 ? 45 : (Math.random() * 20 + 340); // gold or pink/red
+        }
+        update() {
+            this.vx *= this.friction;
+            this.vy *= this.friction;
+            this.vy += this.gravity;
+            this.x += this.vx;
+            this.y += this.vy;
+            this.opacity -= this.decay;
+            this.rotation += this.rotationSpeed;
+        }
+        draw() {
+            eCtx.save();
+            eCtx.translate(this.x, this.y);
+            eCtx.rotate(this.rotation);
+            eCtx.globalAlpha = Math.max(0, this.opacity);
+            eCtx.fillStyle = `hsl(${this.hue}, 90%, 60%)`;
+            drawHeart(eCtx, 0, 0, this.size);
+            eCtx.restore();
+        }
+    }
+
+    function drawHeart(ctx, x, y, size) {
+        const s = size / 16;
+        ctx.beginPath();
+        ctx.moveTo(x, y + 4 * s);
+        ctx.bezierCurveTo(x, y, x - 7 * s, y, x - 7 * s, y + 4 * s);
+        ctx.bezierCurveTo(x - 7 * s, y + 8 * s, x, y + 12 * s, x, y + 14 * s);
+        ctx.bezierCurveTo(x, y + 12 * s, x + 7 * s, y + 8 * s, x + 7 * s, y + 4 * s);
+        ctx.bezierCurveTo(x + 7 * s, y, x, y, x, y + 4 * s);
+        ctx.fill();
+    }
+
+    function triggerExplosion(x, y, count = 40) {
+        for (let i = 0; i < count; i++) {
+            hearts.push(new HeartParticle(x, y));
+        }
+    }
+
+    function animateHearts() {
+        eCtx.clearRect(0, 0, explosionCanvas.width, explosionCanvas.height);
+        hearts = hearts.filter(h => h.opacity > 0);
+        hearts.forEach(h => { h.update(); h.draw(); });
+        requestAnimationFrame(animateHearts);
+    }
+    requestAnimationFrame(animateHearts);
+
+    // Click on main heart = big explosion
+    document.getElementById('main-heart').addEventListener('click', (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        triggerExplosion(cx, cy, 60);
+    });
+
+    // Click anywhere = small sparkle
+    document.addEventListener('click', (e) => {
+        triggerExplosion(e.clientX, e.clientY, 8);
+        createSparkles(e.clientX, e.clientY);
+    });
+
+    // ═══════════════════════════════════════════
+    //  SPARKLE BURST ON CLICK
+    // ═══════════════════════════════════════════
+    function createSparkles(x, y) {
+        const container = document.createElement('div');
+        container.className = 'sparkle-burst';
+        container.style.left = x + 'px';
+        container.style.top = y + 'px';
+        for (let i = 0; i < 12; i++) {
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            const angle = (Math.PI * 2 / 12) * i;
+            const dist = Math.random() * 50 + 30;
+            s.style.setProperty('--sx', Math.cos(angle) * dist + 'px');
+            s.style.setProperty('--sy', Math.sin(angle) * dist + 'px');
+            s.style.background = ['#ff2d55', '#ff6b9d', '#ffd700', '#fff'][Math.floor(Math.random() * 4)];
+            container.appendChild(s);
+        }
+        document.body.appendChild(container);
+        setTimeout(() => container.remove(), 900);
+    }
+
+    // ═══════════════════════════════════════════
+    //  CURSOR HEARTS
+    // ═══════════════════════════════════════════
+    let lastCursorHeart = 0;
+    document.addEventListener('mousemove', (e) => {
+        const now = Date.now();
+        if (now - lastCursorHeart < 120) return;
+        lastCursorHeart = now;
+        const heart = document.createElement('div');
+        heart.className = 'cursor-heart';
+        heart.textContent = ['💕', '💖', '✨', '💗', '♥'][Math.floor(Math.random() * 5)];
+        heart.style.left = e.clientX + 'px';
+        heart.style.top = e.clientY + 'px';
+        heart.style.setProperty('--dx', (Math.random() - 0.5) * 60 + 'px');
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 1500);
+    });
+
+    // ═══════════════════════════════════════════
+    //  INTRO + MULTI-TRACK MUSIC PLAYER
+    // ═══════════════════════════════════════════
+    const introScreen = document.getElementById('intro-screen');
+    const startBtn = document.getElementById('start-btn');
+    const musicToggle = document.getElementById('music-toggle');
+    const trackSwitch = document.getElementById('track-switch');
+    const trackNameEl = document.getElementById('track-name');
+    const musicControls = document.getElementById('music-controls');
+
+    const tracks = [
+        { el: document.getElementById('track-1'), name: 'Perfect — Ed Sheeran' },
+        { el: document.getElementById('track-2'), name: 'A Thousand Years — Piano' }
+    ];
+
+    let currentTrack = 0;
+    let musicPlaying = false;
+
+    // Set volumes
+    tracks.forEach(t => t.el.volume = 0.4);
+
+    function playCurrentTrack() {
+        tracks[currentTrack].el.play().then(() => {
+            musicPlaying = true;
+            musicToggle.textContent = '🔊';
+            musicControls.classList.add('playing');
+            trackNameEl.textContent = tracks[currentTrack].name;
+        }).catch(() => {
+            musicPlaying = false;
+        });
+    }
+
+    function stopAllTracks() {
+        tracks.forEach(t => {
+            t.el.pause();
+            t.el.currentTime = 0;
+        });
+    }
+
+    startBtn.addEventListener('click', () => {
+        introScreen.classList.add('hidden');
+        playCurrentTrack();
+        // Initial big explosion
+        setTimeout(() => {
+            const cx = window.innerWidth / 2;
+            const cy = window.innerHeight / 2;
+            triggerExplosion(cx, cy, 80);
+            setTimeout(() => triggerExplosion(cx - 100, cy - 50, 30), 200);
+            setTimeout(() => triggerExplosion(cx + 100, cy - 50, 30), 400);
+        }, 400);
+    });
+
+    // Mute / Unmute
+    musicToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (musicPlaying) {
+            tracks[currentTrack].el.pause();
+            musicToggle.textContent = '🔇';
+            musicControls.classList.remove('playing');
+        } else {
+            tracks[currentTrack].el.play().catch(() => {});
+            musicToggle.textContent = '🔊';
+            musicControls.classList.add('playing');
+        }
+        musicPlaying = !musicPlaying;
+    });
+
+    // Switch track
+    trackSwitch.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const wasPlaying = musicPlaying;
+        stopAllTracks();
+        currentTrack = (currentTrack + 1) % tracks.length;
+        trackNameEl.textContent = tracks[currentTrack].name;
+        // Animate track name
+        trackNameEl.style.opacity = '0';
+        trackNameEl.style.transform = 'translateY(6px)';
+        setTimeout(() => {
+            trackNameEl.style.transition = 'all 0.4s ease';
+            trackNameEl.style.opacity = '1';
+            trackNameEl.style.transform = 'translateY(0)';
+        }, 50);
+        if (wasPlaying) {
+            playCurrentTrack();
+        } else {
+            musicPlaying = false;
+            musicControls.classList.remove('playing');
+        }
+    });
+
+    // ═══════════════════════════════════════════
+    //  SCROLL REVEAL
+    // ═══════════════════════════════════════════
+    const revealEls = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ═══════════════════════════════════════════
+    //  PARALLAX HERO
+    // ═══════════════════════════════════════════
+    window.addEventListener('scroll', () => {
+        const scrolled = window.scrollY;
+        const hero = document.getElementById('hero');
+        if (hero) {
+            hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+            hero.style.opacity = 1 - scrolled / 700;
+        }
+    });
+
+    // ═══════════════════════════════════════════
+    //  PERIODIC HEART RAIN (subtle)
+    // ═══════════════════════════════════════════
+    setInterval(() => {
+        const x = Math.random() * window.innerWidth;
+        triggerExplosion(x, -20, 3);
+    }, 3000);
+
+    // ═══════════════════════════════════════════
+    //  LIGHTBOX (click to open photo)
+    // ═══════════════════════════════════════════
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxClose = document.getElementById('lightbox-close');
+
+    document.addEventListener('click', (e) => {
+        const img = e.target.closest('.photo-placeholder.has-img img');
+        if (img) {
+            e.stopPropagation();
+            lightboxImg.src = img.src;
+            lightbox.classList.add('active');
+        }
+    });
+
+    function closeLightbox() {
+        lightbox.classList.remove('active');
+        setTimeout(() => { lightboxImg.src = ''; }, 400);
+    }
+
+    lightbox.addEventListener('click', closeLightbox);
+    lightboxClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            closeLightbox();
+        }
+    });
+
+    </script>
+</body>
+</html>
