@@ -1,83 +1,44 @@
-# Script para comprimir imágenes JPG usando .NET nativo
-# Requiere Windows PowerShell (no PowerShell Core en Linux/Mac)
-
-$imgFolder = ".\img"
-$maxWidth = 1920
-$quality = 70
-
+# Rotar fisicamente las fotos que estan mal orientadas
 Add-Type -AssemblyName System.Drawing
 
-# Función para obtener el codec JPEG
-function Get-JpegCodec {
-    $jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | 
-                 Where-Object { $_.MimeType -eq 'image/jpeg' }
-    return $jpegCodec
-}
+$fotosARotar = @(
+    ".\img\7-12-2025_1.jpg",
+    ".\img\7-12-2025_2.jpg",
+    ".\img\22-10-2025.jpg",
+    ".\img\8-11-2025.jpg",
+    ".\img\10-11-2025.jpg",
+    ".\img\6-2-2026_1.jpg",
+    ".\img\27-11-2025.jpg",
+    ".\img\6-12-2025.jpg",
+    ".\img\5-1-2026.jpg",
+    ".\img\10-1-2026_1.jpg",
+    ".\img\10-1-2026_2.jpg",
+    ".\img\6-2-2026_2.jpg"
+)
 
-# Función para comprimir imagen
-function Compress-Image {
-    param(
-        [string]$InputPath,
-        [int]$MaxWidth,
-        [int]$Quality
-    )
-    
-    $img = [System.Drawing.Image]::FromFile($InputPath)
-    
-    # Calcular nuevas dimensiones manteniendo aspecto
-    if ($img.Width -gt $MaxWidth) {
-        $ratio = $MaxWidth / $img.Width
-        $newWidth = $MaxWidth
-        $newHeight = [int]($img.Height * $ratio)
-    } else {
-        $newWidth = $img.Width
-        $newHeight = $img.Height
-    }
-    
-    # Crear nueva imagen redimensionada
-    $newImg = New-Object System.Drawing.Bitmap($newWidth, $newHeight)
-    $graphics = [System.Drawing.Graphics]::FromImage($newImg)
-    $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
-    $graphics.DrawImage($img, 0, 0, $newWidth, $newHeight)
-    
-    # Configurar calidad JPEG
-    $encoderParams = New-Object System.Drawing.Imaging.EncoderParameters(1)
-    $encoderParams.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter(
-        [System.Drawing.Imaging.Encoder]::Quality, 
-        $Quality
-    )
-    
-    # Guardar imagen comprimida
-    $codec = Get-JpegCodec
-    $tempPath = "$InputPath.tmp"
-    $newImg.Save($tempPath, $codec, $encoderParams)
-    
-    # Limpiar recursos
-    $graphics.Dispose()
-    $newImg.Dispose()
-    $img.Dispose()
-    
-    return $tempPath
-}
-
-# Procesar imágenes
-Get-ChildItem $imgFolder -Include *.jpg,*.jpeg -Recurse | ForEach-Object {
-    $imgPath = $_.FullName
-    
-    try {
-        Write-Host "Procesando: $($_.Name)..." -ForegroundColor Cyan
-        
-        $tempPath = Compress-Image -InputPath $imgPath -MaxWidth $maxWidth -Quality $quality
-        
-        if (Test-Path $tempPath) {
-            # Reemplazar original
-            Remove-Item $imgPath -Force
-            Move-Item $tempPath $imgPath -Force
-            Write-Host "  Completado" -ForegroundColor Green
+foreach ($foto in $fotosARotar) {
+    if (Test-Path $foto) {
+        try {
+            Write-Host "Rotando: $foto" -ForegroundColor Cyan
+            
+            $img = [System.Drawing.Image]::FromFile($foto)
+            $img.RotateFlip([System.Drawing.RotateFlipType]::Rotate90FlipNone)
+            
+            $tempPath = "$foto.tmp"
+            $img.Save($tempPath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
+            $img.Dispose()
+            
+            Remove-Item $foto -Force
+            Move-Item $tempPath $foto -Force
+            
+            Write-Host "  OK - Rotada correctamente" -ForegroundColor Green
+        } catch {
+            Write-Warning "Error rotando $foto"
         }
-    } catch {
-        Write-Warning "Error procesando $imgPath`: $($_.Exception.Message)"
+    } else {
+        Write-Warning "No encontrada: $foto"
     }
 }
 
-Write-Host "`nProceso finalizado." -ForegroundColor Green
+Write-Host ""
+Write-Host "Proceso completado!" -ForegroundColor Green
